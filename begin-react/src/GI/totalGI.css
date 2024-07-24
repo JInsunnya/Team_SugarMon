@@ -1,0 +1,18 @@
+.donuttext {
+  display: flex;
+  align-items: center;
+}
+
+.donutimage {
+  margin-right: 20%;
+}
+
+.textdonut {
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.textdonut h1 {
+  margin: 0 5px;
+}
