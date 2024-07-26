@@ -1,0 +1,31 @@
+/* src/components/InfiniteScroll.css */
+.infinite-scroll-container {
+  width: 100%; /* 원하는 너비 설정 */
+  overflow: hidden;
+  position: relative;
+  white-space: nowrap; /* 자식 요소들을 한 줄에 나열 */
+}
+
+.scroll-content {
+  display: flex; /* 수평으로 배치 */
+  animation: scroll 20s linear infinite;
+}
+
+.scroll-item {
+  display: inline-block;
+  width: 500px; /* 아이템 너비 설정 */
+  text-align: center;
+  border-right: none;
+  font-size: 50px;
+  font-weight: 700;
+  margin-left: 25px;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
