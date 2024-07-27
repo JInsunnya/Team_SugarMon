@@ -4,9 +4,11 @@ import { styled } from 'styled-components';
 import { useRecoilValue } from 'recoil';
 import { userState } from './atom';
 import { Link } from 'react-router-dom';
+import useStore from './store';
 
 const MyPage = () => {
   const user = localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData')):[];
+  const isUser = useStore((state) => state.user);
   
 
   useEffect(() => {
@@ -19,14 +21,20 @@ const MyPage = () => {
       <Header></Header>
       <MyPageBody>
         <ProfileBody>
-          <image>Profile Image</image>
+          <img src={user.photoURL} style={{borderRadius:"50%", width:'170px', height:'170px'}}/>
+          {isUser?
           <div >
-            <div style={{display:'flex', justifyContent:"center", alignItems:'center'}}>
-              <p style={{color:"#667BC6", fontSize:'40px', fontWeight:'800'}}>{user.displayName}</p>
-              <p style={{fontSize:'30px', fontWeight:'700', color:'grey'}}>&nbsp;님</p>
-            </div>
-            <ModiButton>프로필 수정하기</ModiButton>
+          <div style={{display:'flex', justifyContent:"center", alignItems:'center'}}>
+            <p style={{color:"#667BC6", fontSize:'40px', fontWeight:'800'}}>{user.displayName}</p>
+            <p style={{fontSize:'30px', fontWeight:'700', color:'grey'}}>&nbsp;님</p>
           </div>
+          <ModiButton>프로필 수정하기</ModiButton>
+        </div>
+        :
+        <div style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
+          <Link to='/login' style={{textDecoration:"none", color:"black", fontSize:'20px', fontWeight:'700'}}>로그인 하기</Link>
+        </div>}
+          
         </ProfileBody>
         <FunctionBody>
           <HabitCheck>

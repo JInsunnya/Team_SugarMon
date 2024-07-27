@@ -5,19 +5,22 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { styled } from 'styled-components'
 import { isUserState, userState } from './atom';
+import useStore from './store';
 
 const Login = () => {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
   const auth = getAuth();
-  const Googleprovider = new GoogleAuthProvider
-  // const AppleProvider = new Apple
+  const Googleprovider = new GoogleAuthProvider;
   const navigate = useNavigate();
+  const user = useStore((state) => state.user);
+  const setUser = useStore((state) => state.setUser);
+  const isUser = localStorage.getItem('login-complete');
   // const [userData, setUserData] = useRecoilState(userState);
-  const userData = useRecoilValue(userState);
-  const setUserData = useSetRecoilState(userState);
-  const isUser = useRecoilValue(isUserState);
-  const setIsUser = useSetRecoilState(isUserState);
+  // const userData = useRecoilValue(userState);
+  // const setUserData = useSetRecoilState(userState);
+  // const isUser = useRecoilValue(isUserState);
+  // const setIsUser = useSetRecoilState(isUserState);
 
   const handleIdChange = (event) => {
     console.log(event.target.value);
@@ -35,7 +38,7 @@ const Login = () => {
         username:id,
         password:password
       })
-      console.log(userData)
+      // console.log(userData)
     } catch(error){
       console.log(error)
     }
@@ -46,24 +49,27 @@ const Login = () => {
 
   }
 
+  
+
   const handleGoogleAuth = () => {
     signInWithPopup(auth, Googleprovider)
     .then(result => {
-      setUserData(result.user)
-      localStorage.setItem("userData", JSON.stringify(result.user))
-      setIsUser(true);
+      // setUserData(result.user)
+      localStorage.setItem("userData", JSON.stringify(result.user));
+      // setIsUser(true);
       // console.log(result.user)
+      setUser(result.user);
     })
     .catch(error => console.log(error))
   }
 
-  // useEffect(() => {
-  //   if(userData){
-  //     navigate('/')
-  //   }
+  useEffect(() => {
+    if(user){
+      navigate('/')
+    }
   
   
-  // },[])
+  },[user])
 
   // useEffect(() => {
   //   let arr = [...userData];
@@ -87,7 +93,7 @@ const Login = () => {
         <LoginCont>
           <LoginInput placeholder='아이디' value={id} onChange={handleIdChange}></LoginInput>
           <LoginInput placeholder='비밀번호' value={password} onChange={handlePasswordChange}></LoginInput>
-          <LoginButton>로그인 하기</LoginButton>
+          <LoginButton >로그인 하기</LoginButton>
         </LoginCont>
         <p style={{color:"lightgrey"}}>____________________________________</p>
         <SnsBody>

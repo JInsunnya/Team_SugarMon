@@ -3,19 +3,28 @@ import { Link } from 'react-router-dom'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { styled } from 'styled-components'
 import { isUserState, userState } from './atom'
+import useStore from './store'
 
 const Nav = () => {
-  const userData = useRecoilValue(userState);
-  const setUserData = useSetRecoilState(userState);
-  const isUser = useRecoilValue(isUserState);
-  const setIsUser = useSetRecoilState(isUserState);
+  // const userData = useRecoilValue(userState);
+  // const setUserData = useSetRecoilState(userState);
+  // const isUser = useRecoilValue(isUserState);
+  // const setIsUser = useSetRecoilState(isUserState);
+  const user = useStore((state) => state.user);
+  const setUser = useStore((state) => state.setUser);
+  const isUser = localStorage.getItem('login-complete');
 
   const handleLogOut = () => {
     localStorage.removeItem('userData');
-    setUserData([]);
-    setIsUser(false);
-    console.log(isUser);
+    // setUserData([]);
+    // setIsUser(false);
+    setUser(false);
+    // console.log(isUser);
   }
+
+  useEffect(() => {
+
+  }, )
   
   return (
     <div>
@@ -25,7 +34,7 @@ const Nav = () => {
           <NavEl href='javascript:void(0)'>GI</NavEl>
         </Category>
         <div>
-          {!isUser ? <button onClick={handleLogOut}>로그아웃</button> : <></>}
+          {user ? <LogoutButton onClick={handleLogOut}>LogOut</LogoutButton> : <></>}
           <MyPage href='/mypage'>
             MyPage
           </MyPage>
@@ -66,4 +75,14 @@ const MyPage = styled.a`
   font-weight: 800;
   text-decoration:none;
   margin-right: 30px;
+`
+
+const LogoutButton = styled.button`
+  border:none;
+  margin-right:20px;
+  border-radius:20px;
+  background:none;
+  font-size:16px;
+  color: white;
+  font-weight: 900;
 `
