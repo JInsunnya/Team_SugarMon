@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
-import "./LoopContents.css"
+import "./FoodLoop.css"
 
-const LoopContents = ({items}) => {
+const FoodLoop = ({items, gi}) => {
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -18,6 +18,22 @@ const LoopContents = ({items}) => {
     return () => clearInterval(intervalId);
   }, []);
   return (
+    <>
+    {gi ? <div className="infinite-scroll-container" ref={containerRef}>
+    <div className="scroll-content">
+      {items.map((item, index) => (
+        <div key={index} className="scroll-item" style={{fontSize:'25px', marginRight:'10px'}}>
+          {item}
+        </div>
+      ))}
+      {items.map((item, index) => (
+        <div key={index + items.length} className="scroll-item" style={{fontSize:"25px", marginRight:'10px'}}>
+          {item}
+        </div>
+      ))}
+    </div>
+  </div>
+  :
     <div className="infinite-scroll-container" ref={containerRef}>
       <div className="scroll-content">
         {items.map((item, index) => (
@@ -31,8 +47,9 @@ const LoopContents = ({items}) => {
           </div>
         ))}
       </div>
-    </div>
+    </div>}
+    </>
   );
 }
 
-export default LoopContents
+export default FoodLoop;

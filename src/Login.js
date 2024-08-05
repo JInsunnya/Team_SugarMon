@@ -3,9 +3,11 @@ import { GoogleAuthProvider, getAuth, onAuthStateChanged, signInWithPopup } from
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { styled } from 'styled-components'
+import { keyframes, styled } from 'styled-components'
 import { isUserState, userState } from './atom';
 import useStore from './store';
+import Character1 from './character1.png';
+import Logo from './Logo.png';
 
 const Login = () => {
   const [id, setId] = useState('');
@@ -16,6 +18,8 @@ const Login = () => {
   const user = useStore((state) => state.user);
   const setUser = useStore((state) => state.setUser);
   const isUser = localStorage.getItem('login-complete');
+  const token = localStorage.getItem('access');
+
   // const [userData, setUserData] = useRecoilState(userState);
   // const userData = useRecoilValue(userState);
   // const setUserData = useSetRecoilState(userState);
@@ -34,13 +38,22 @@ const Login = () => {
 
   async function handleSubmit(){
     try{
-      const response = await axios.post(``,{
-        username:id,
-        password:password
-      })
-      // console.log(userData)
+      const response = await axios.post('http://3.37.188.30:8000/user/login/',{
+        "username":id,
+        "password":password
+      },{
+        headers:{
+          Authorization:`Bearer ${token}`
+        }
+      }
+      )
+      localStorage.setItem( 'access',response.data.access);
+      setUser(response.data.access);
+      navigate('/')
+      
     } catch(error){
       console.log(error)
+      console.log(token)
     }
 
   }
@@ -59,6 +72,7 @@ const Login = () => {
       // setIsUser(true);
       // console.log(result.user)
       setUser(result.user);
+      
     })
     .catch(error => console.log(error))
   }
@@ -79,10 +93,10 @@ const Login = () => {
 
   return (
     <div style={{display:"flex", justifyContent:"center", alignItems:"center",gap:"250px"}}>
-      <CharacterImg>CharacterImg</CharacterImg>
+      <CharacterImg src={Character1}></CharacterImg>
       <LoginBody>
-        <LogoImg>
-          Logo  
+        <LogoImg src={Logo}>
+  
         </LogoImg>
         <GotoSignUp>
           <p style={{color:"grey"}}>아직 회원이 아니신가요?</p>
@@ -92,12 +106,12 @@ const Login = () => {
         </GotoSignUp>
         <LoginCont>
           <LoginInput placeholder='아이디' value={id} onChange={handleIdChange}></LoginInput>
-          <LoginInput placeholder='비밀번호' value={password} onChange={handlePasswordChange}></LoginInput>
-          <LoginButton >로그인 하기</LoginButton>
+          <LoginInput type='password' placeholder='비밀번호' value={password} onChange={handlePasswordChange}></LoginInput>
+          <LoginButton onClick={handleSubmit} >로그인 하기</LoginButton>
         </LoginCont>
         <p style={{color:"lightgrey"}}>____________________________________</p>
         <SnsBody>
-          <SnsButton onClick={handleAppleAuth} >애플</SnsButton>
+          {/* <SnsButton onClick={handleAppleAuth} >애플</SnsButton> */}
           <SnsButton onClick={handleGoogleAuth}>구글</SnsButton>
         </SnsBody>
       </LoginBody>
@@ -107,9 +121,43 @@ const Login = () => {
 
 export default Login
 
-const CharacterImg = styled.image`
-
+const bounce = keyframes`
+0% {
+  top: 100px;
+  animation-timing-function: ease-in;
+}
+50% {
+  top: 120px;
+  
+  animation-timing-function: ease-out;
+}
+55% {
+  top: 140px; 
+  animation-timing-function: ease-in;
+}
+65% {
+  top: 120px; 
+  animation-timing-function: ease-out;
+}
+95% {
+  top: 100px;
+  animation-timing-function: ease-in;
+}
+100% {
+  top: 100px;
+  animation-timing-function: ease-in;
+}
 `
+
+const CharacterImg = styled.img`
+  width:250px;
+  height:250px;
+  position:relative;
+  top:0;
+  animation: ${bounce} 1s infinite;
+`
+
+
 
 const LoginBody = styled.div`
   display:flex;
@@ -119,10 +167,12 @@ const LoginBody = styled.div`
 
 `
 
-const LogoImg = styled.image`
-  font-size:35px;
-  margin-bottom: 30px;
-  margin-top:150px;
+const LogoImg = styled.img`
+  width:250px;
+  height:100px;
+  margin-top:100px;
+  margin-bottom:20px;
+  margin-left:-20px;
 `
 
 const GotoSignUp = styled.div`

@@ -12,6 +12,8 @@ import { RecoilRoot } from 'recoil';
 import MyPage from './MyPage';
 import Developer from './Developer';
 import DoctorSignUp from './DoctorSignUp';
+import ChatRoom from './ChatRoom';
+import Question from './Question';
 
 const Router = () => {
   return(
@@ -23,7 +25,7 @@ const Router = () => {
         <Route path='/mypage' element={<MyPage/>}></Route>
         <Route path='/developerIntroduction' element={<Developer></Developer>}></Route>
         <Route path='/doctorsignup' element={<DoctorSignUp/>}></Route>
-
+        <Route path='/question' element={<Question></Question>}></Route>
 
       </Routes>
     
@@ -36,7 +38,7 @@ root.render(
   <React.StrictMode>
     <RecoilRoot>
       <Router>
-        <App />
+        <App/>
       </Router>
     </RecoilRoot>
   </React.StrictMode>

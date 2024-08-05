@@ -2,6 +2,9 @@ import axios from 'axios';
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { styled } from 'styled-components'
+import Logo from './Logo.png'
+import useStore from './store';
+import character from './character2.png'
 
 const SignUp = () => {
   const [id, setId] = useState('');
@@ -9,6 +12,8 @@ const SignUp = () => {
   const [password2, setPassword2] = useState('');
   const [nickName, setNickName] = useState('');
   const [isDoctor, setIsDoctor] = useState(true);
+  const [email, setEmail] = useState('');
+  const [isComplete, setIsComplete] = useState(false);
 
   const handleIdChange = (event) => {
     console.log(event.target.value)
@@ -27,15 +32,25 @@ const SignUp = () => {
     setNickName(event.target.value);
   }
 
+  const handleEmailChange = (e) => {
+    console.log(e.target.value);
+    setEmail(e.target.value);
+  }
+
   async function handleSubmit(){
     try{
-      const response = await axios.post(``,
+      const response = await axios.post(`http://3.37.188.30:8000/user/register/`,
       {
         username: id,
         password1: password,
         password2: password2,
-        nickname: nickName
+        email:email,
+        nickname: nickName,
+        isDoctor:false
       })
+      console.log(response.data);
+      localStorage.setItem("access",response.data.access);
+      setIsComplete(true);
       
     } catch(error){
       console.log(error)
@@ -48,13 +63,20 @@ const SignUp = () => {
   }
 
   return (
-    <div>
+    <>
+    {isComplete ?
+      <div style={{width:'1000px', margin:'auto', textAlign:'center', marginTop:'200px'}}>
+        <CharImg src={character}></CharImg>
+        <p style={{fontSize:"30px"}}>회원가입을 성공했습니다🥳</p>
+        <Link to={'/'}>홈으로 돌아가기</Link>
+      </div>
+    : <div>
       <SignUpBody>
-        <LogoImg>Logo</LogoImg>
+        <LogoImg src={Logo}></LogoImg>
         <GotoLogin>
           <p style={{color:"grey"}}>이미 회원이신가요?</p>
           <Link to='/login' style={{textDecoration:"none"}}>
-            <p style={{marginTop:"-10px", color:"#667BC6"}}>로그인하기</p>
+            <p style={{marginTop:"-10px", color:"#667BC6", textDecoration:'none', color:'white'}}>로그인하기</p>
           </Link>
         </GotoLogin>
         {isDoctor ?
@@ -67,19 +89,26 @@ const SignUp = () => {
         :
         <SignUpCont>
           <SignUpInput placeholder='아이디' value={id} onChange={handleIdChange}></SignUpInput>
-          <SignUpInput placeholder='비밀번호' value={password} onChange={handlePasswordChange}></SignUpInput>
-          <SignUpInput placeholder='비밀번호 확인' value={password2} onChange={handlePassword2Change}></SignUpInput>
+          <SignUpInput type='password' placeholder='비밀번호' value={password} onChange={handlePasswordChange}></SignUpInput>
+          <SignUpInput type='password' placeholder='비밀번호 확인' value={password2} onChange={handlePassword2Change}></SignUpInput>
+          <SignUpInput placeholder='이메일' value={email} onChange={handleEmailChange}></SignUpInput>
           <SignUpInput placeholder='닉네임' value={nickName} onChange={handleNickNameChange}></SignUpInput>
           <SignUpButton onClick={handleSubmit}>가입하기</SignUpButton>
         </SignUpCont>
         }
       </SignUpBody>
     </div>
+    }
+    </>
   )
 }
 
 export default SignUp
 
+const CharImg = styled.img`
+  width:100px;
+  height:100px;
+`
 
 const SignUpBody = styled.div`
   display:flex;
@@ -90,9 +119,12 @@ const SignUpBody = styled.div`
   margin-top: 70px;
 `
 
-const LogoImg = styled.image`
-  font-size:70px;
+const LogoImg = styled.img`
+  width:400px;
+  height:150px;
   margin-bottom:5px;
+  margin-top:-20px;
+  margin-left:-25px;
 `
 
 const SignUpCont = styled.div`
@@ -125,7 +157,8 @@ const SignUpButton = styled.button`
 `
 
 const GotoLogin = styled.div`
-  margin-bottom: 30px;
+  margin-bottom: 20px;
+  margin-top:-25px;
 `
 
 const AnotherWay = styled.div`

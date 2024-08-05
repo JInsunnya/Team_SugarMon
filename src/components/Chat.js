@@ -1,52 +1,60 @@
 import React, { useState } from 'react'
 import { styled } from 'styled-components'
+import ChatRoom from '../ChatRoom';
+import ChatList from '../ChatList';
+import useChatStore from '../chatStore';
 
 const Chat = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const startChat = useChatStore((state) => (state.startChat));
+  const setStartChat = useChatStore((state) => (state.setStartChat));
+
 
   const handleOpenClick = () => {
     setIsOpen(true);
   }
 
-  const handleCloseClick = () => {
-    setIsOpen(false);
-  }
+  
 
   return (
     <div style={{position:"fixed", bottom:"0",right:"0", zIndex:"9"}}>
       {!isOpen ? <OpenButton onClick={handleOpenClick}>Chat<br></br>💬</OpenButton>
       : 
       <>
-        
-        <ChatBody>
-          <CloseButton onClick={handleCloseClick}>X</CloseButton>
-          <DoctorProfile>
-            <ProfileImg>
-              <img/>
-            </ProfileImg>
-            <ProfileText>
-              <p style={{fontWeight:"800", fontSize:"20px"}}>내과 전문의 김00</p>
-              <p style={{fontSize:"14px", marginTop:'-12px'}}>동대문구 이문동 몬스터 병원</p>
-            </ProfileText>
-          </DoctorProfile>
-          <div style={{overflow:"scroll", height:"280px"}}>
-            <MySpeech>
-
-            </MySpeech>
-            <DoctorSpeech>
-
-            </DoctorSpeech>
-            <MySpeech></MySpeech>
-          </div>
-          <div style={{display:"flex", justifyContent:"center", position:"relative"}}>
-            <TextInput/>
-            <ButtonStyle for="input-file">+</ButtonStyle>
-            <FileInput type='file' id="input-file" style={{display:"none"}}/>
-            
-          </div>
-        </ChatBody>
+      {startChat?<ChatRoom isOpen={isOpen} setIsOpen={setIsOpen}></ChatRoom>:<ChatList></ChatList>}
         
       </>
+      // <>
+        
+      //   <ChatBody>
+      //     <CloseButton onClick={handleCloseClick}>X</CloseButton>
+      //     <DoctorProfile>
+      //       <ProfileImg>
+      //         <img/>
+      //       </ProfileImg>
+      //       <ProfileText>
+      //         <p style={{fontWeight:"800", fontSize:"20px"}}>내과 전문의 김00</p>
+      //         <p style={{fontSize:"14px", marginTop:'-12px'}}>동대문구 이문동 몬스터 병원</p>
+      //       </ProfileText>
+      //     </DoctorProfile>
+      //     <div style={{overflow:"scroll", height:"280px"}}>
+      //       <MySpeech>
+
+      //       </MySpeech>
+      //       <DoctorSpeech>
+
+      //       </DoctorSpeech>
+      //       <MySpeech></MySpeech>
+      //     </div>
+      //     <div style={{display:"flex", justifyContent:"center", position:"relative"}}>
+      //       <TextInput/>
+      //       <ButtonStyle for="input-file">+</ButtonStyle>
+      //       <FileInput type='file' id="input-file" style={{display:"none"}}/>
+            
+      //     </div>
+      //   </ChatBody>
+        
+      // </>
       }
     </div>
   )
@@ -60,7 +68,7 @@ const OpenButton = styled.button`
   height:80px;
   border-radius:15px;
   border:none;
-  background-color:#667BC6;
+  background-color:#E8C5E5;
   font-size:20px;
   font-weight:900;
   position:relative;
@@ -81,18 +89,7 @@ const ChatBody = styled.div`
   transtion:
 `
 
-const CloseButton = styled.button`
-  position:absolute;
-  right:20px;
-  top: 10px;
-  border:none;
-  background-color:#667BC6;
-  border-radius:5px;
-  width:30px;
-  height:25px;
-  color:white;
-  font-weight:900;
-`
+
 
 const MySpeech = styled.div`
   width:200px;

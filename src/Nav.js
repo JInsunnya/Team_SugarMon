@@ -19,6 +19,7 @@ const Nav = () => {
     // setUserData([]);
     // setIsUser(false);
     setUser(false);
+    localStorage.removeItem('access')
     // console.log(isUser);
   }
 
@@ -48,7 +49,7 @@ export default Nav
 
 const NavBody = styled.div`
   // background: rgba(218, 114, 151, .6);
-  background: rgba(102, 123, 198, .5);
+  background:#91DDCF;
   display:flex;
   height: 45px;
   justfiy-content:center;

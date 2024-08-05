@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 import { styled } from 'styled-components';
+import useStore from './store';
 
 const DoctorSignUp = () => {
   const [id, setId] = useState('');
@@ -10,7 +11,10 @@ const DoctorSignUp = () => {
   const [nickName, setNickName] = useState('');
   const [subject, setSubject] = useState('');
   const [affiliation, setAffiliation] = useState(''); 
+  const [email, setEmail] = useState('');
   const [isComplete, setIsComplete] = useState(false);
+  const user = useStore((state) => state.user);
+  const setUser = useStore((state) => state.setUser);
 
 
   const handleIdChange = (event) => {
@@ -37,17 +41,25 @@ const DoctorSignUp = () => {
     console.log(event.target.value)
     setAffiliation(event.target.value);
   }
+  
+  const handleEmailChange = (event) => {
+    console.log(event.target.value)
+    setEmail(event.target.value);
+  }
 
   async function handleSubmit(){
     try{
-      const response = await axios.post(``,
+      const response = await axios.post(`http://3.37.188.30:8000/user/register/`,
       {
         username: id,
         password1: password,
         password2: password2,
-        nickname: nickName
+        email:email,
+        nickname: nickName,
+        isDoctor:true
       })
       setIsComplete(true);
+      setUser(response.data.access);
       
     } catch(error){
       console.log(error)
@@ -70,18 +82,19 @@ const DoctorSignUp = () => {
         
         <SignUpCont>
           <SignUpInput placeholder='아이디' value={id} onChange={handleIdChange}></SignUpInput>
-          <SignUpInput placeholder='비밀번호' value={password} onChange={handlePasswordChange}></SignUpInput>
-          <SignUpInput placeholder='비밀번호 확인' value={password2} onChange={handlePassword2Change}></SignUpInput>
+          <SignUpInput  type='password' placeholder='비밀번호' value={password} onChange={handlePasswordChange}></SignUpInput>
+          <SignUpInput type='password' placeholder='비밀번호 확인' value={password2} onChange={handlePassword2Change}></SignUpInput>
           <SignUpInput placeholder='닉네임' value={nickName} onChange={handleNickNameChange}></SignUpInput>
-          <SignUpInput placeholder='진료과목' value={subject} onChange={handleSubjectChange}></SignUpInput>
-          <SignUpInput placeholder='소속' value={affiliation} onChange={handleAffiliationChange}></SignUpInput>
+          {/* <SignUpInput placeholder='진료과목' value={subject} onChange={handleSubjectChange}></SignUpInput> */}
+          {/* <SignUpInput placeholder='소속' value={affiliation} onChange={handleAffiliationChange}></SignUpInput> */}
+          <SignUpInput placeholder='이메일' value={email} onChange={handleEmailChange}></SignUpInput>
           <p style={{marginTop:'-15px', marginBottom:'-20px', color:'grey'}}>의사면허 확인 가능한 파일 첨부</p>
-          <FileBox class="filebox">
+          {/* <FileBox class="filebox">
             
             <FileStyle class="upload-name" value="첨부파일" placeholder="의사면허 확인 가능한 파일 첨부"/>
             <FindButton for="file">파일<br/>찾기</FindButton> 
             <File type="file" id="file"/>
-          </FileBox>
+          </FileBox> */}
           <SignUpButton onClick={handleSubmit}>가입하기</SignUpButton>
         </SignUpCont>
       </SignUpBody>

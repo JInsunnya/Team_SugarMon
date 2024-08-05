@@ -1,18 +1,35 @@
 import React, { useEffect, useState } from 'react'
 import Header from './Header';
-import { styled } from 'styled-components';
+import { keyframes, styled } from 'styled-components';
 import { useRecoilValue } from 'recoil';
 import { userState } from './atom';
 import { Link } from 'react-router-dom';
 import useStore from './store';
+import axios from 'axios';
+import Character from './character2.png'
 
 const MyPage = () => {
   const user = localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData')):[];
   const isUser = useStore((state) => state.user);
+  const token = localStorage.getItem('access');
+  const [userData, setUserData] = useState([]);
   
 
   useEffect(() => {
-    console.log(user)
+
+    async function getInformation(){
+      try{
+        const response = await axios.get(`https://sugarmon.store/user/me/`,{
+        headers:{
+          Authorization:`Bearer ${token}`
+        }
+      })
+      setUserData(response.data);
+    }catch(error){
+      console.log(error)
+    }}
+    
+    getInformation();
   },[])
 
 
@@ -21,18 +38,21 @@ const MyPage = () => {
       <Header></Header>
       <MyPageBody>
         <ProfileBody>
-          <img src={user.photoURL} style={{borderRadius:"50%", width:'170px', height:'170px'}}/>
+          
           {isUser?
           <div >
+          {/* <img src={user.photoURL} style={{borderRadius:"50%", width:'170px', height:'170px'}}/> */}
+          <img src={Character} style={{borderRadius:"50%", width:'170px', height:'170px'}}/>
+
           <div style={{display:'flex', justifyContent:"center", alignItems:'center'}}>
             <p style={{color:"#667BC6", fontSize:'40px', fontWeight:'800'}}>{user.displayName}</p>
-            <p style={{fontSize:'30px', fontWeight:'700', color:'grey'}}>&nbsp;님</p>
+            <p style={{fontSize:'30px', fontWeight:'700', color:'grey', marginTop:'10px'}}>&nbsp;{userData.nickname}님</p>
           </div>
-          <ModiButton>프로필 수정하기</ModiButton>
+          {/* <ModiButton>프로필 수정하기</ModiButton> */}
         </div>
         :
         <div style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
-          <Link to='/login' style={{textDecoration:"none", color:"black", fontSize:'20px', fontWeight:'700'}}>로그인 하기</Link>
+          <Link to='/login' style={{textDecoration:"none", color:"black", fontSize:'20px', fontWeight:'700', marginBottom:'100px'}}>로그인 하기</Link>
         </div>}
           
         </ProfileBody>
@@ -50,7 +70,7 @@ const MyPage = () => {
             </DeveloperInt>
           </Link>
           <Question>
-            <Link  style={{textDecoration:"none"}}>
+            <Link to={'/question'} style={{textDecoration:"none"}}>
               <p style={{color:'black'}}>
               자주묻는 질문🤔
               </p>
@@ -74,12 +94,12 @@ const MyPageBody = styled.div`
 const ProfileBody = styled.div`
   display:flex;
   gap:70px;
-  margin-top:120px;
+  margin-top:100px;
 `
 
 const FunctionBody = styled.div`
   display:flex;
-  margin-top: 100px;
+  margin-top: 10px;
   gap: 70px;
 `
 
@@ -101,7 +121,7 @@ const HabitCheck = styled.div`
 const DeveloperInt = styled.div`
   width: 200px;
   height:200px;
-  background:#FFB4C2;
+  background:rgba(145, 221, 207,.7);
   border-radius:20px;
   display:flex;
   justify-content:center;
@@ -115,7 +135,7 @@ const DeveloperInt = styled.div`
 const Question = styled.div`
   width: 200px;
   height: 200px;
-  background:#FDFFD2;
+  background:#F7F9F2;
   border-radius:20px;
   display:flex;
   justify-content:center;
