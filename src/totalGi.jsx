@@ -8,6 +8,7 @@ import Sushi from './sushi.png';
 import Banana from './banana.png';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import Chat from './components/Chat';
 
 const token =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI0NzQzNDEzLCJpYXQiOjE3MjIxNTE0MTMsImp0aSI6IjdkMTlmMzVhMzQ1ZDQzZjVhOGQ0MGZhN2IzN2VjNDMwIiwidXNlcl9pZCI6MX0.2s9VjKiwwxYMUM5c9v71HhQNIVPUR4OSRqumZZkNgOI';
@@ -83,9 +84,12 @@ function TotalGi() {
   }
 
   return (
+    <>
     <div>
       <div className="mainlogo">
-        <img className="logo2" src={SugarmonLogo2} alt="Sugarmon Logo 2" />
+        <Link to={"/"}>
+          <img className="logo2" src={SugarmonLogo2} alt="Sugarmon Logo 2" />
+        </Link>
       </div>
       <div>
         <h2 className="date">
@@ -154,6 +158,8 @@ function TotalGi() {
         </div>
       </div>
     </div>
+    <Chat/>
+    </>
   );
 }
 

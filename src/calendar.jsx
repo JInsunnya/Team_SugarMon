@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import './calendar.css';
 import { generateDatesForMonth } from './calendarplus.jsx';
 import SugarmonLogo2 from './SugarmonLogo2.jpg';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Chat from './components/Chat';
 
 const token =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI0NzQzNDEzLCJpYXQiOjE3MjIxNTE0MTMsImp0aSI6IjdkMTlmMzVhMzQ1ZDQzZjVhOGQ0MGZhN2IzN2VjNDMwIiwidXNlcl9pZCI6MX0.2s9VjKiwwxYMUM5c9v71HhQNIVPUR4OSRqumZZkNgOI';
@@ -41,19 +42,23 @@ function Calendar() {
   };
 
   return (
+    <>
     <div>
       <div className="SugarmonLogo2div">
-        <img
-          className="SugarmonLogo2"
-          src={SugarmonLogo2}
-          alt="SugarmonLogo2"
-        />
+        <Link to={"/"} style={{width:"400px"}}>
+          <img
+            className="SugarmonLogo2"
+            src={SugarmonLogo2}
+            alt="SugarmonLogo2"
+          />
+        </Link>
       </div>
       <div className="calendar">
         <header className="header">
           <button
             className="button"
             onClick={() => setMonth((prev) => (prev === 0 ? 11 : prev - 1))}
+            style={{background:"#91DDCF"}}
           >
             이전 월
           </button>
@@ -61,6 +66,7 @@ function Calendar() {
           <button
             className="button"
             onClick={() => setMonth((prev) => (prev === 11 ? 0 : prev + 1))}
+            style={{background:"#91DDCF"}}
           >
             다음 월
           </button>
@@ -73,6 +79,7 @@ function Calendar() {
                   <button
                     className="date-button"
                     onClick={() => handleDateClick(date)}
+                    style={{fontWeight:'900', fontSize:'18px'}}
                   >
                     {date.getDate()}
                   </button>
@@ -83,6 +90,8 @@ function Calendar() {
         </div>
       </div>
     </div>
+    <Chat/>
+    </>
   );
 }
 

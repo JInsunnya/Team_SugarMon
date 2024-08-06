@@ -15,7 +15,8 @@
 }
 
 .SugarmonLogo2 {
-  width: 25%;
+  width: 300px;
+  margin-left: 50px;
 }
 
 .date h1 {
@@ -61,6 +62,7 @@ header .button:active {
 button {
   margin: 0 10px;
   font-family: 'HancomMalangMalang-Regular';
+  background-color:#91DDCF ;
 }
 
 .dates {

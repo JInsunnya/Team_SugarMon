@@ -3,7 +3,7 @@ import {devtools, persist} from 'zustand/middleware'
 
 const useChatStore = create(
   devtools((set) => ({
-  startChat: true,
+  startChat: false,
   setStartChat: (userData) => set((state) => ({startChat: true})),
 })))
 

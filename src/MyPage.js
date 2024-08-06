@@ -11,8 +11,9 @@ import Character from './character2.png'
 const MyPage = () => {
   const user = localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData')):[];
   const isUser = useStore((state) => state.user);
-  const token = localStorage.getItem('access');
+  const token = sessionStorage.getItem('access');
   const [userData, setUserData] = useState([]);
+  const [day, setDay] = useState('');
   
 
   useEffect(() => {
@@ -31,6 +32,24 @@ const MyPage = () => {
     
     getInformation();
   },[])
+
+  useEffect(() => {
+    async function getCheckday() {
+      try{
+        const response = await axios.get(`https://sugarmon.store/checklist/getContinuousDay/`,{
+          headers:{
+            Authorization: `Bearer ${token}`
+          }
+        })
+        console.log(response.data)
+        setDay(response.data.days);
+      } catch(error){
+        console.log(error)
+      }
+    }
+
+    getCheckday();
+  })
 
 
   return (
@@ -57,13 +76,23 @@ const MyPage = () => {
           
         </ProfileBody>
         <FunctionBody>
+          
           <HabitCheck>
-            <p>습관을 유지한 지</p>
-            <div style={{display:"flex", alignItems:"center", marginTop:'-40px'}}>
-              <p style={{color:"#FDFFD2", fontWeight:"900", fontSize:"50px", marginRight:'10px'}}>5</p>
-              <p>일째에요</p>
+            {isUser ? 
+            <div style={{marginTop:"30px"}}>
+              <p>습관을 유지한 지</p>
+              <div style={{display:"flex", alignItems:"center", marginTop:'-40px'}}>
+                <p style={{color:"#FDFFD2", fontWeight:"900", fontSize:"50px", marginRight:'10px'}}>{day}</p>
+                <p>일째에요</p>
+              </div>
             </div>
+            : 
+            <Link to={"/login"} style={{textDecoration:"none", color:"white"}}>
+              <p >로그인 해주세요</p>
+            </Link>
+            }
           </HabitCheck>
+
           <Link to={"/developerintroduction"} style={{textDecoration:"none"}}>
             <DeveloperInt>
               <p >개발자 소개👩🏻‍💻</p>
