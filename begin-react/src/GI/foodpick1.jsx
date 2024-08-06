@@ -2,14 +2,12 @@ import React, { useState, useEffect } from 'react';
 import SugarmonLogo1 from '../SugarmonLogo1.jpg';
 import './foodpick.css';
 import axios from 'axios';
-import { useLocation } from 'react-router-dom';
 
 function App() {
   const [foods, setFoods] = useState([]);
   const [selectedFoods, setSelectedFoods] = useState([]);
   const [completedFoods, setCompletedFoods] = useState([]);
   const [error, setError] = useState(null);
-  const [when, setWhen] = useState(null);
 
   const token =
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI0NzQzNDEzLCJpYXQiOjE3MjIxNTE0MTMsImp0aSI6IjdkMTlmMzVhMzQ1ZDQzZjVhOGQ0MGZhN2IzN2VjNDMwIiwidXNlcl9pZCI6MX0.2s9VjKiwwxYMUM5c9v71HhQNIVPUR4OSRqumZZkNgOI';
@@ -21,22 +19,13 @@ function App() {
     },
   });
 
-  const { search } = useLocation();
-  const query = new URLSearchParams(search);
-  const whenParam = query.get('when');
-
   useEffect(() => {
-    setWhen(whenParam);
-
     const fetchFoods = async () => {
       try {
         const response = await apiCall.get(`/gIndex/getFood`);
-        console.log('Response:', response);
-
         const sortedFoods = response.data.sort((a, b) =>
           a.foodName.localeCompare(b.foodName, 'ko-KR')
         );
-
         setFoods(sortedFoods);
       } catch (error) {
         console.error('Error fetching foods:', error);
@@ -45,7 +34,17 @@ function App() {
     };
 
     fetchFoods();
-  }, [apiCall, whenParam]);
+  }, []);
+
+  useEffect(() => {
+    const savedCompletedFoods =
+      JSON.parse(localStorage.getItem('completedFoods')) || [];
+    setCompletedFoods(savedCompletedFoods);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('completedFoods', JSON.stringify(completedFoods));
+  }, [completedFoods]);
 
   const handleFoodClick = (food) => {
     if (selectedFoods.includes(food)) {
@@ -57,16 +56,44 @@ function App() {
 
   const handleComplete = async () => {
     try {
+      const when = 1;
+      const ateDate = new Date().toISOString().split('T')[0];
+
       const foodsToRegister = selectedFoods.map((food) => ({
         name: food.foodName,
-        ateDate: new Date().toISOString().split('T')[0],
+        ateDate: ateDate,
         when: when,
       }));
 
-      console.log('Foods to register:', foodsToRegister);
+      await apiCall.post(`/ateFood/registerAteFood`, foodsToRegister);
 
-      await apiCall.post('/ateFood/registerAteFood', foodsToRegister);
-      setCompletedFoods(selectedFoods);
+      let totalGI = 0;
+
+      for (const food of selectedFoods) {
+        try {
+          const response = await apiCall.get(`/gIndex/getGI/${food.foodName}`);
+          const giData = response.data;
+
+          const giToRegister = {
+            foodName: food.foodName,
+            gIndex: giData.gIndex,
+          };
+
+          await apiCall.post(`/gIndex/registerGI`, giToRegister);
+
+          totalGI += giData.gIndex;
+        } catch (error) {
+          console.error(
+            `Error registering GI for ${food.foodName}:`,
+            error.response ? error.response.data : error.message
+          );
+        }
+      }
+
+      console.log(`Total GI of selected foods: ${totalGI}`);
+
+      setCompletedFoods([...completedFoods, ...selectedFoods]);
+      setSelectedFoods([]);
     } catch (error) {
       console.error('Error registering foods:', error);
       setError(error.message);
@@ -75,21 +102,19 @@ function App() {
 
   const handleClearSelection = async () => {
     try {
-      selectedFoods.forEach((food) =>
-        console.log(`Deleting food ID: ${food.id}`)
+      const updatedCompletedFoods = completedFoods.filter(
+        (food) => !selectedFoods.includes(food)
       );
 
-      const deleteRequests = selectedFoods.map((food) =>
-        apiCall.delete(`/ateFood/deleteAteFood/${food.id}`)
+      setCompletedFoods(updatedCompletedFoods);
+      localStorage.setItem(
+        'completedFoods',
+        JSON.stringify(updatedCompletedFoods)
       );
 
-      await Promise.all(deleteRequests);
-
-      setFoods(foods.filter((food) => !selectedFoods.includes(food)));
       setSelectedFoods([]);
-      setCompletedFoods([]);
     } catch (error) {
-      console.error('Error deleting foods:', error);
+      console.error('Error clearing selection:', error);
       setError(error.message);
     }
   };

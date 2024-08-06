@@ -1,0 +1,123 @@
+.logo1 {
+  width: 45%;
+  height: 85%;
+  padding: 5%;
+  margin-bottom: 2%;
+}
+
+.ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-left: 6%;
+  margin-right: 4%;
+}
+
+.li {
+  margin: 0;
+}
+
+.button {
+  padding: 15px 20px;
+  border: none;
+  background-color: #f7f9f2;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 150px;
+  transition: background-color 0.3s;
+}
+
+.button:hover,
+.button.selected {
+  background-color: #e3f7b1;
+}
+
+.complete-button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.complete-button:hover {
+  background-color: #0056b3;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-left: 6%;
+  margin-right: 6%;
+  margin-bottom: 20px;
+  width: 90%;
+}
+
+.sidebar {
+  background-color: #f1f1f1;
+  padding: 10px;
+  border-radius: 5px;
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 10px;
+  flex: 1;
+  margin-right: 10px;
+  white-space: nowrap;
+  width: 100%;
+  max-width: 100%;
+}
+
+.sidebar ul {
+  display: flex;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.sidebar li {
+  margin: 0;
+}
+
+.sidebar button {
+  padding: 10px;
+  border: none;
+  background-color: #e3f7b1;
+  border-radius: 5px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.main-content {
+  display: flex;
+  width: 100%;
+}
+
+.food-list {
+  flex: 2;
+}
+
+.clear-button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #dc3545;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.clear-button:hover {
+  background-color: #c82333;
+}
