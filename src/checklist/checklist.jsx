@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './checklist.css';
 import Apple from '../apple.png';
-import SugarmonLogo4 from '../SugarmonLogo4.jpg';
-import SugarmonLogo3 from '../SugarmonLogo3.jpg';
+import SugarmonLogo4 from '../character1.png';
+import SugarmonLogo3 from '../character2.png';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 
@@ -50,7 +50,7 @@ const CheckBoxes = ({
   );
 };
 
-function App() {
+function CheckList() {
   const [breakfastCheckedList, setBreakfastCheckedList] = useState([]);
   const [lunchCheckedList, setLunchCheckedList] = useState([]);
   const [dinnerCheckedList, setDinnerCheckedList] = useState([]);
@@ -74,7 +74,7 @@ function App() {
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI0NzQzNDEzLCJpYXQiOjE3MjIxNTE0MTMsImp0aSI6IjdkMTlmMzVhMzQ1ZDQzZjVhOGQ0MGZhN2IzN2VjNDMwIiwidXNlcl9pZCI6MX0.2s9VjKiwwxYMUM5c9v71HhQNIVPUR4OSRqumZZkNgOI';
 
   const apiCall = axios.create({
-    baseURL: 'http://3.37.188.30:8000/',
+    baseURL: 'https://sugarmon.store/',
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -291,4 +291,4 @@ function App() {
   );
 }
 
-export default App;
+export default CheckList;

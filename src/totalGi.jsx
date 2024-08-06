@@ -1,26 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import './totalGI.css';
-import SugarmonLogo2 from '../SugarmonLogo2.jpg';
-import SugarmonLogo4 from '../SugarmonLogo4.jpg';
+import './totalGI.css'
+import SugarmonLogo2 from './SugarmonLogo2.jpg';
+import SugarmonLogo4 from './character1.png';
 import Egg from './egg.png';
 import Salad from './salad.png';
 import Sushi from './sushi.png';
 import Banana from './banana.png';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import Pick from './foodpick.jsx';
 
 const token =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI0NzQzNDEzLCJpYXQiOjE3MjIxNTE0MTMsImp0aSI6IjdkMTlmMzVhMzQ1ZDQzZjVhOGQ0MGZhN2IzN2VjNDMwIiwidXNlcl9pZCI6MX0.2s9VjKiwwxYMUM5c9v71HhQNIVPUR4OSRqumZZkNgOI';
 
 const apiCall = axios.create({
-  baseURL: 'http://3.37.188.30:8000/',
+  baseURL: 'https://sugarmon.store/',
   headers: {
     Authorization: `Bearer ${token}`,
   },
 });
 
-function App() {
+function TotalGi() {
   const [currentDate, setCurrentDate] = useState(null);
   const [breakfastCheckedList, setBreakfastCheckedList] = useState([]);
   const [lunchCheckedList, setLunchCheckedList] = useState([]);
@@ -158,4 +157,4 @@ function App() {
   );
 }
 
-export default App;
+export default TotalGi;

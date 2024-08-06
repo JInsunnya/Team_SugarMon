@@ -15,7 +15,7 @@ const apiCall = axios.create({
   },
 });
 
-function App() {
+function Calendar() {
   const [year, setYear] = useState(new Date().getFullYear());
   const [month, setMonth] = useState(new Date().getMonth());
   const [dates, setDates] = useState([]);
@@ -86,4 +86,4 @@ function App() {
   );
 }
 
-export default App;
+export default Calendar;

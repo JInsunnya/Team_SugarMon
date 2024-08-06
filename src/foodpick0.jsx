@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import SugarmonLogo1 from '../SugarmonLogo1.jpg';
+import SugarmonLogo1 from './Logo.png';
 import './foodpick.css';
 import axios from 'axios';
 
-function App() {
+function Pick0() {
   const [foods, setFoods] = useState([]);
   const [selectedFoods, setSelectedFoods] = useState([]);
   const [completedFoods, setCompletedFoods] = useState([]);
@@ -13,7 +13,7 @@ function App() {
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI0NzQzNDEzLCJpYXQiOjE3MjIxNTE0MTMsImp0aSI6IjdkMTlmMzVhMzQ1ZDQzZjVhOGQ0MGZhN2IzN2VjNDMwIiwidXNlcl9pZCI6MX0.2s9VjKiwwxYMUM5c9v71HhQNIVPUR4OSRqumZZkNgOI';
 
   const apiCall = axios.create({
-    baseURL: 'http://3.37.188.30:8000/',
+    baseURL: 'https://sugarmon.store/',
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -169,4 +169,4 @@ function App() {
   );
 }
 
-export default App;
+export default Pick0;

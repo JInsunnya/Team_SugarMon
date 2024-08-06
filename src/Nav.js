@@ -31,8 +31,8 @@ const Nav = () => {
     <div>
       <NavBody>
         <Category>
-          <NavEl href='javascript:void(0)'>Home</NavEl>
-          <NavEl href='javascript:void(0)'>GI</NavEl>
+          <NavEl href='/home'>Home</NavEl>
+          <NavEl href='/gi'>GI</NavEl>
         </Category>
         <div>
           {user ? <LogoutButton onClick={handleLogOut}>LogOut</LogoutButton> : <></>}
