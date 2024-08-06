@@ -61,14 +61,6 @@ function CheckList() {
     return `${year}년 ${month}월 ${day}일`;
   };
 
-  const formatDateForServer = (dateString) => {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  };
-
   const token =
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI0NzQzNDEzLCJpYXQiOjE3MjIxNTE0MTMsImp0aSI6IjdkMTlmMzVhMzQ1ZDQzZjVhOGQ0MGZhN2IzN2VjNDMwIiwidXNlcl9pZCI6MX0.2s9VjKiwwxYMUM5c9v71HhQNIVPUR4OSRqumZZkNgOI';
 
@@ -93,6 +85,7 @@ function CheckList() {
 
         const fetchedItems = itemsResponse.data;
 
+        // 각 식사별로 체크리스트를 설정합니다.
         setBreakfastCheckedList(fetchedItems.breakfast || []);
         setLunchCheckedList(fetchedItems.lunch || []);
         setDinnerCheckedList(fetchedItems.dinner || []);
@@ -118,38 +111,29 @@ function CheckList() {
 
   const submitChecklist = async (e, meal) => {
     e.preventDefault();
-    const formattedDate = formatDateForServer(currentDate);
     const data = {
-      date: formattedDate,
-      when: meal === 'Breakfast' ? 0 : meal === 'Lunch' ? 1 : 2,
-      meal_order:
-        meal === 'Breakfast'
-          ? breakfastCheckedList.includes('식사 순서')
-          : meal === 'Lunch'
-          ? lunchCheckedList.includes('식사 순서')
-          : dinnerCheckedList.includes('식사 순서'),
-      sugar:
-        meal === 'Breakfast'
-          ? breakfastCheckedList.includes('식후 액상과당 섭취')
-          : meal === 'Lunch'
-          ? lunchCheckedList.includes('식후 액상과당 섭취')
-          : dinnerCheckedList.includes('식후 액상과당 섭취'),
-      exercise:
-        meal === 'Breakfast'
-          ? breakfastCheckedList.includes('운동 여부')
-          : meal === 'Lunch'
-          ? lunchCheckedList.includes('운동 여부')
-          : dinnerCheckedList.includes('운동 여부'),
+      breakfast: breakfastCheckedList,
+      lunch: lunchCheckedList,
+      dinner: dinnerCheckedList,
     };
-    console.log(data);
 
     try {
-      console.log(data);
-      const response = await apiCall.post('/checklist/items/', data);
+      const mealData =
+        meal === 'Breakfast'
+          ? data.breakfast
+          : meal === 'Lunch'
+          ? data.lunch
+          : meal === 'Dinner'
+          ? data.dinner
+          : [];
+
+      await apiCall.post('/checklist/daily/', {
+        meal,
+        items: mealData,
+      });
       console.log(`${meal} checklist updated successfully.`);
-      console.log('Server Response:', response.data);
     } catch (error) {
-      console.error('Error updating checklist:', error.response.data);
+      console.error('Error updating checklist:', error);
       if (error.response && error.response.status === 401) {
         setError('인증 오류: 유효하지 않은 토큰입니다.');
       } else {
