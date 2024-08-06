@@ -8,13 +8,7 @@ import { useLocation } from 'react-router-dom';
 
 const checkBoxList = ['식사 순서', '식후 액상과당 섭취', '운동 여부'];
 
-const CheckBoxes = ({
-  meal,
-  checkedList,
-  setCheckedList,
-  onSubmit,
-  onDelete,
-}) => {
+const CheckBoxes = ({ meal, checkedList, setCheckedList, onSubmit }) => {
   const checkedItemHandler = (value, isChecked) => {
     if (isChecked) {
       setCheckedList((prev) => [...prev, value]);
@@ -54,11 +48,9 @@ function CheckList() {
   const [breakfastCheckedList, setBreakfastCheckedList] = useState([]);
   const [lunchCheckedList, setLunchCheckedList] = useState([]);
   const [dinnerCheckedList, setDinnerCheckedList] = useState([]);
-  const [allChecklistItems, setAllChecklistItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentDate, setCurrentDate] = useState(null);
-  const [eatenFoods, setEatenFoods] = useState([]);
   const location = useLocation();
 
   const formatDate = (dateString) => {
@@ -66,8 +58,15 @@ function CheckList() {
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
     const day = date.getDate();
-
     return `${year}년 ${month}월 ${day}일`;
+  };
+
+  const formatDateForServer = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   };
 
   const token =
@@ -92,7 +91,12 @@ function CheckList() {
         );
         console.log('Items Response:', itemsResponse.data);
 
-        setAllChecklistItems(itemsResponse.data);
+        const fetchedItems = itemsResponse.data;
+
+        setBreakfastCheckedList(fetchedItems.breakfast || []);
+        setLunchCheckedList(fetchedItems.lunch || []);
+        setDinnerCheckedList(fetchedItems.dinner || []);
+
         setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -114,109 +118,42 @@ function CheckList() {
 
   const submitChecklist = async (e, meal) => {
     e.preventDefault();
+    const formattedDate = formatDateForServer(currentDate);
     const data = {
-      breakfast: breakfastCheckedList,
-      lunch: lunchCheckedList,
-      dinner: dinnerCheckedList,
+      date: formattedDate,
+      when: meal === 'Breakfast' ? 0 : meal === 'Lunch' ? 1 : 2,
+      meal_order:
+        meal === 'Breakfast'
+          ? breakfastCheckedList.includes('식사 순서')
+          : meal === 'Lunch'
+          ? lunchCheckedList.includes('식사 순서')
+          : dinnerCheckedList.includes('식사 순서'),
+      sugar:
+        meal === 'Breakfast'
+          ? breakfastCheckedList.includes('식후 액상과당 섭취')
+          : meal === 'Lunch'
+          ? lunchCheckedList.includes('식후 액상과당 섭취')
+          : dinnerCheckedList.includes('식후 액상과당 섭취'),
+      exercise:
+        meal === 'Breakfast'
+          ? breakfastCheckedList.includes('운동 여부')
+          : meal === 'Lunch'
+          ? lunchCheckedList.includes('운동 여부')
+          : dinnerCheckedList.includes('운동 여부'),
     };
+    console.log(data);
 
     try {
-      const mealData =
-        meal === 'Breakfast'
-          ? data.breakfast
-          : meal === 'Lunch'
-          ? data.lunch
-          : meal === 'Dinner'
-          ? data.dinner
-          : [];
-
-      await apiCall.post('/checklist/daily/', {
-        meal,
-        items: mealData,
-      });
+      console.log(data);
+      const response = await apiCall.post('/checklist/items/', data);
       console.log(`${meal} checklist updated successfully.`);
+      console.log('Server Response:', response.data);
     } catch (error) {
-      console.error('Error updating checklist:', error);
+      console.error('Error updating checklist:', error.response.data);
       if (error.response && error.response.status === 401) {
         setError('인증 오류: 유효하지 않은 토큰입니다.');
       } else {
         setError('체크리스트 업데이트 중 오류가 발생했습니다.');
-      }
-    }
-  };
-
-  const submitChecklistItems = async (items) => {
-    try {
-      await apiCall.post('/checklist/items/', items);
-      console.log('Checklist items updated successfully.');
-    } catch (error) {
-      console.error('Error updating checklist items:', error);
-      if (error.response && error.response.status === 401) {
-        setError('인증 오류: 유효하지 않은 토큰입니다.');
-      } else {
-        setError('체크리스트 항목 업데이트 중 오류가 발생했습니다.');
-      }
-    }
-  };
-
-  const updateChecklistItem = async (id, itemData) => {
-    try {
-      await apiCall.put(`/checklist/items/${id}/`, itemData);
-      console.log('Checklist item updated successfully.');
-    } catch (error) {
-      console.error('Error updating checklist item:', error);
-      if (error.response && error.response.status === 401) {
-        setError('인증 오류: 유효하지 않은 토큰입니다.');
-      } else if (error.response && error.response.status === 404) {
-        setError('요청한 체크리스트 항목을 찾을 수 없습니다.');
-      } else {
-        setError('체크리스트 항목 업데이트 중 오류가 발생했습니다.');
-      }
-    }
-  };
-
-  const deleteChecklistItem = async (item) => {
-    try {
-      const itemToDelete = allChecklistItems.find((i) => i.text === item);
-      if (itemToDelete) {
-        await apiCall.delete(`/checklist/items/${itemToDelete.id}/`);
-        console.log('Checklist item deleted successfully.');
-
-        const itemsResponse = await apiCall.get('/checklist/items/');
-        setAllChecklistItems(itemsResponse.data);
-
-        setBreakfastCheckedList((prev) => prev.filter((i) => i !== item));
-        setLunchCheckedList((prev) => prev.filter((i) => i !== item));
-        setDinnerCheckedList((prev) => prev.filter((i) => i !== item));
-      }
-    } catch (error) {
-      console.error('Error deleting checklist item:', error);
-      if (error.response && error.response.status === 401) {
-        setError('인증 오류: 유효하지 않은 토큰입니다.');
-      } else if (error.response && error.response.status === 404) {
-        setError('요청한 체크리스트 항목을 찾을 수 없습니다.');
-      } else {
-        setError('체크리스트 항목 삭제 중 오류가 발생했습니다.');
-      }
-    }
-  };
-
-  const registerEatenFoods = async () => {
-    try {
-      const foodsToRegister = eatenFoods.map((food) => ({
-        ateDate: currentDate || new Date().toISOString().split('T')[0], // 현재 날짜로 기본 설정
-        when: food.when,
-        foods: food.items,
-      }));
-
-      await apiCall.post('/ateFood/registerAteFood', foodsToRegister);
-      console.log('Eaten foods registered successfully.');
-    } catch (error) {
-      console.error('Error registering eaten foods:', error);
-      if (error.response && error.response.status === 401) {
-        setError('인증 오류: 유효하지 않은 토큰입니다.');
-      } else {
-        setError('음식 등록 중 오류가 발생했습니다.');
       }
     }
   };
@@ -248,7 +185,6 @@ function CheckList() {
             checkedList={breakfastCheckedList}
             setCheckedList={setBreakfastCheckedList}
             onSubmit={submitChecklist}
-            onDelete={deleteChecklistItem}
           />
         </div>
         <div className="meallistback">
@@ -258,7 +194,6 @@ function CheckList() {
             checkedList={lunchCheckedList}
             setCheckedList={setLunchCheckedList}
             onSubmit={submitChecklist}
-            onDelete={deleteChecklistItem}
           />
         </div>
         <div className="meallistback">
@@ -268,7 +203,6 @@ function CheckList() {
             checkedList={dinnerCheckedList}
             setCheckedList={setDinnerCheckedList}
             onSubmit={submitChecklist}
-            onDelete={deleteChecklistItem}
           />
         </div>
       </div>
