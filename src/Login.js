@@ -47,7 +47,8 @@ const Login = () => {
         }
       }
       )
-      localStorage.setItem( 'access',response.data.access);
+      // localStorage.setItem( 'access',response.data.access);
+      sessionStorage.setItem('access', response.data.access);
       setUser(response.data.access);
       navigate('/')
       
@@ -68,7 +69,7 @@ const Login = () => {
     signInWithPopup(auth, Googleprovider)
     .then(result => {
       // setUserData(result.user)
-      localStorage.setItem("userData", JSON.stringify(result.user));
+      // localStorage.setItem("userData", JSON.stringify(result.user));
       // setIsUser(true);
       // console.log(result.user)
       setUser(result.user);

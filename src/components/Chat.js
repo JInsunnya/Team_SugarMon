@@ -21,7 +21,7 @@ const Chat = () => {
       {!isOpen ? <OpenButton onClick={handleOpenClick}>Chat<br></br>💬</OpenButton>
       : 
       <>
-      {startChat?<ChatRoom isOpen={isOpen} setIsOpen={setIsOpen}></ChatRoom>:<ChatList></ChatList>}
+      {startChat?<ChatRoom isOpen={isOpen} setIsOpen={setIsOpen}></ChatRoom>:<ChatList isOpen={isOpen} setIsOpen={setIsOpen}></ChatList>}
         
       </>
       // <>
@@ -68,7 +68,7 @@ const OpenButton = styled.button`
   height:80px;
   border-radius:15px;
   border:none;
-  background-color:#E8C5E5;
+  background-color:rgba(218, 114, 151, 1);
   font-size:20px;
   font-weight:900;
   position:relative;

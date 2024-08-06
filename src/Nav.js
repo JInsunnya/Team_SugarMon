@@ -20,6 +20,7 @@ const Nav = () => {
     // setIsUser(false);
     setUser(false);
     localStorage.removeItem('access')
+    sessionStorage.removeItem('access')
     // console.log(isUser);
   }
 
@@ -35,7 +36,7 @@ const Nav = () => {
           <NavEl href='/gi'>GI</NavEl>
         </Category>
         <div>
-          {user ? <LogoutButton onClick={handleLogOut}>LogOut</LogoutButton> : <></>}
+          {user? <LogoutButton onClick={handleLogOut}>LogOut</LogoutButton> : <></>}
           <MyPage href='/mypage'>
             MyPage
           </MyPage>

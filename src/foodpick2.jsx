@@ -58,7 +58,9 @@ function Pick2() {
     try {
       const when = 2;
       const ateDate = new Date().toISOString().split('T')[0];
+      let totalGI = 0;
 
+      // 음식 데이터를 서버에 등록
       const foodsToRegister = selectedFoods.map((food) => ({
         name: food.foodName,
         ateDate: ateDate,
@@ -67,20 +69,11 @@ function Pick2() {
 
       await apiCall.post(`/ateFood/registerAteFood`, foodsToRegister);
 
-      let totalGI = 0;
-
+      // 선택한 음식들의 GI 총합 계산
       for (const food of selectedFoods) {
         try {
           const response = await apiCall.get(`/gIndex/getGI/${food.foodName}`);
           const giData = response.data;
-
-          const giToRegister = {
-            foodName: food.foodName,
-            gIndex: giData.gIndex,
-          };
-
-          await apiCall.post(`/gIndex/registerGI`, giToRegister);
-
           totalGI += giData.gIndex;
         } catch (error) {
           console.error(
@@ -90,9 +83,17 @@ function Pick2() {
         }
       }
 
+      // GI 총합을 localStorage에 저장
+      localStorage.setItem('totalGI', totalGI);
       console.log(`Total GI of selected foods: ${totalGI}`);
 
-      setCompletedFoods([...completedFoods, ...selectedFoods]);
+      const uniqueCompletedFoods = [
+        ...new Set(
+          [...completedFoods, ...selectedFoods].map((food) => food.foodName)
+        ),
+      ].map((name) => selectedFoods.find((food) => food.foodName === name));
+
+      setCompletedFoods(uniqueCompletedFoods);
       setSelectedFoods([]);
     } catch (error) {
       console.error('Error registering foods:', error);

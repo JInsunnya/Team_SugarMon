@@ -49,6 +49,8 @@ const QuestionBody = styled.div`
 
 const Title = styled.h2`
   margin-left:10px;
+  
+  
 `
 
 const QBody = styled.div`
@@ -57,6 +59,10 @@ const QBody = styled.div`
 
 const QTitle = styled.p`
   font-size:20px;
+  
+  &:hover{
+    color:#91DDC;
+  }
 `
 const QContent = styled.p`
 

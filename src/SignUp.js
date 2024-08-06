@@ -1,6 +1,6 @@
 import axios from 'axios';
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { styled } from 'styled-components'
 import Logo from './Logo.png'
 import useStore from './store';
@@ -14,6 +14,9 @@ const SignUp = () => {
   const [isDoctor, setIsDoctor] = useState(true);
   const [email, setEmail] = useState('');
   const [isComplete, setIsComplete] = useState(false);
+  const user = useStore((state) => (state.user));
+  const setUser = useStore((state) => (state.setUser));
+  const navigate = useNavigate();
 
   const handleIdChange = (event) => {
     console.log(event.target.value)
@@ -49,7 +52,9 @@ const SignUp = () => {
         isDoctor:false
       })
       console.log(response.data);
-      localStorage.setItem("access",response.data.access);
+      // localStorage.setItem("access",response.data.access);
+      sessionStorage.setItem('access', response.data.access);
+
       setIsComplete(true);
       
     } catch(error){
@@ -57,6 +62,13 @@ const SignUp = () => {
     }
 
   }
+
+  useEffect(() => {
+    if(user){
+      navigate('/')
+    }
+  }, [])
+  
 
   function handleClick(){
     setIsDoctor(false);
