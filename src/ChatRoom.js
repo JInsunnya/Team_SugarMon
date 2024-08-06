@@ -26,7 +26,7 @@ const ChatRoom = ({ isOpen, setIsOpen }) => {
     });
 
     // 웹소켓 객체 생성
-    socketRef.current = new window.WebSocket(`ws://sugarmon.store:8000/ws/chatRoom/${chatId}`);
+    socketRef.current = new window.WebSocket(`wss://sugarmon.store:8000/ws/chatRoom/${chatId}`);
 
     socketRef.current.onopen = () => {
       console.log('WebSocket connection established');
