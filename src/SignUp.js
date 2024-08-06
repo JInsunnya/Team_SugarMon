@@ -39,7 +39,7 @@ const SignUp = () => {
 
   async function handleSubmit(){
     try{
-      const response = await axios.post(`http://3.37.188.30:8000/user/register/`,
+      const response = await axios.post(`https://sugarmon.store/user/register/`,
       {
         username: id,
         password1: password,
