@@ -15,6 +15,7 @@ import { ScrollAnimation } from "@lasbe/react-scroll-animation";
 const Main = () => {
   const foods = ["🍎", "🥓", "🍦", "🍚", "🥒","🍿","🍩","🍜","🧂","🍬","🍔","🥞","🫐","🍉","🥔","🍠"]
   const gi = [36, 49, 65, 93, 15, 72, 86, 73, 10, 80, 61, 80, 34, 72, 90, 55 ]
+  const food = 3;
   const [show, setShow] = useState(false);
   const user = useStore((state) => (state.user))
   const setUser = useStore((state) => (state.setUser));
