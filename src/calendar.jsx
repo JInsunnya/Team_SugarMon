@@ -43,54 +43,54 @@ function Calendar() {
 
   return (
     <>
-    <div>
-      <div className="SugarmonLogo2div">
-        <Link to={"/"} style={{width:"400px"}}>
-          <img
-            className="SugarmonLogo2"
-            src={SugarmonLogo2}
-            alt="SugarmonLogo2"
-          />
-        </Link>
-      </div>
-      <div className="calendar">
-        <header className="header">
-          <button
-            className="button"
-            onClick={() => setMonth((prev) => (prev === 0 ? 11 : prev - 1))}
-            style={{background:"#91DDCF"}}
-          >
-            이전 월
-          </button>
-          <h2 className="datefont">{`${year}년  ${month + 1}월`}</h2>
-          <button
-            className="button"
-            onClick={() => setMonth((prev) => (prev === 11 ? 0 : prev + 1))}
-            style={{background:"#91DDCF"}}
-          >
-            다음 월
-          </button>
-        </header>
-        <div className="dates">
-          <nav>
-            <ul className="calendar-grid">
-              {dates.map((date, index) => (
-                <li className="calendar-cell" key={index}>
-                  <button
-                    className="date-button"
-                    onClick={() => handleDateClick(date)}
-                    style={{fontWeight:'900', fontSize:'18px'}}
-                  >
-                    {date.getDate()}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </nav>
+      <div>
+        <div className="SugarmonLogo2div">
+          <Link to={'/'} style={{ width: '400px' }}>
+            <img
+              className="SugarmonLogo2"
+              src={SugarmonLogo2}
+              alt="SugarmonLogo2"
+            />
+          </Link>
+        </div>
+        <div className="calendar">
+          <header className="header">
+            <button
+              className="button"
+              onClick={() => setMonth((prev) => (prev === 0 ? 11 : prev - 1))}
+              style={{ background: '#91DDCF' }}
+            >
+              이전 월
+            </button>
+            <h2 className="datefont">{`${year}년  ${month + 1}월`}</h2>
+            <button
+              className="button"
+              onClick={() => setMonth((prev) => (prev === 11 ? 0 : prev + 1))}
+              style={{ background: '#91DDCF' }}
+            >
+              다음 월
+            </button>
+          </header>
+          <div className="dates">
+            <nav>
+              <ul className="calendar-grid">
+                {dates.map((date, index) => (
+                  <li className="calendar-cell" key={index}>
+                    <button
+                      className="date-button"
+                      onClick={() => handleDateClick(date)}
+                      style={{ fontWeight: '900', fontSize: '18px' }}
+                    >
+                      {date.getDate()}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </div>
         </div>
       </div>
-    </div>
-    <Chat/>
+      <Chat />
     </>
   );
 }
